@@ -240,6 +240,7 @@ def show_post(post_id):
 
 # TODO: Use a decorator so only an admin user can create a new post
 @app.route("/new-post", methods=["GET", "POST"])
+@login_required
 def add_new_post():
     form = CreatePostForm()
     if form.validate_on_submit():
