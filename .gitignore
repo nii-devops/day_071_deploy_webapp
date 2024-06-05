@@ -4,8 +4,9 @@
 .idea/
 .vscode
 .env
+.virt/*
 
-.instance/
+.instance/*
 .sample_posts.py
 sample_posts.py
 my_data.py
