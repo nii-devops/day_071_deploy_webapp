@@ -15,8 +15,8 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from time import sleep
 from typing import List
 
-from dotenv import load_dotenv, dotenv_values
-load_dotenv()
+# from dotenv import load_dotenv, dotenv_values
+# load_dotenv()
 
 
 
