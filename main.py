@@ -1,3 +1,4 @@
+import os
 from datetime import date
 from flask import Flask, abort, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
@@ -13,6 +14,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from time import sleep
 from typing import List
+
+from dotenv import load_dotenv, dotenv_values
+load_dotenv()
 
 
 
@@ -30,7 +34,10 @@ This will install the packages from the requirements.txt for this project.
 '''
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+#app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+
+app.config['SECRET_KEY'] = os.getenv("FLASK_KEY")
+
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
@@ -60,7 +67,9 @@ class Base(DeclarativeBase):
     pass
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URI")
+
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -178,12 +187,11 @@ def login():
             # Check if Password matches that in DB
             if check_password_hash(user.password, password):
                 login_user(user)
-                flash("Login successful. Redirecting...", category='success')
+                # flash("Login successful. Redirecting...", category='success')
                 sleep(2)
                 return redirect(url_for('get_all_posts'))
             else:
                 flash("Wrong password! Try again.", category='danger')
-                    
         else:
             flash(f"User with email ({email}) does not exist. Register user.", category='danger')
             return redirect(url_for('register'))
@@ -283,21 +291,6 @@ def delete_post(post_id):
     return redirect(url_for('get_all_posts'))
 
 
-# @app.route("/comment/<int:post_id>", methods=['get', 'post'])
-# @login_required
-# def comment(post_id):
-#     comment_form = CommentForm()
-#     if comment_form.validate_on_submit():
-#         new_comment = Comment(
-#             text=comment_form.text.data
-#         )
-#         db.session.add(new_comment)
-#         db.session.commit()
-#     return redirect(url_for('show_post', post_id=post_id))
-
-
-
-
 @app.route("/about")
 def about():
     return render_template("about.html")
@@ -326,4 +319,4 @@ def users():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=False, port=5002)

@@ -3,6 +3,7 @@
 # For example we ignore the hidden files from Pycharm and VS Code.
 .idea/
 .vscode
+.env
 
 .instance/
 .sample_posts.py
